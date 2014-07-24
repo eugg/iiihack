@@ -119,10 +119,11 @@ return array(
         'Zizaco\Confide\ConfideServiceProvider', // Confide Provider
         'Zizaco\Entrust\EntrustServiceProvider', // Entrust Provider for roles
         'Bllim\Datatables\DatatablesServiceProvider', // Datatables
+        'Artdarek\OAuth\OAuthServiceProvider', //Oauth 
 
         /* Uncomment for use in development */
-//        'Way\Generators\GeneratorsServiceProvider', // Generators
-//        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider', // IDE Helpers
+       'Way\Generators\GeneratorsServiceProvider', // Generators
+       'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider', // IDE Helpers
 
     ),
 
@@ -196,6 +197,7 @@ return array(
         'String'          => 'Andrew13\Helpers\String', // String
         'Carbon'          => 'Carbon\Carbon', // Carbon
         'Datatables'      => 'Bllim\Datatables\Datatables', // DataTables
+        'OAuth'			  => 'Artdarek\OAuth\Facade\OAuth', //oauth
 
     ),
 
