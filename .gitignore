@@ -23,3 +23,5 @@ vagrant
 
 # Packages
 _ide_helpers.php
+
+nohup.out
