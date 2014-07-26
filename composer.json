@@ -16,7 +16,6 @@
         "bllim/datatables": "~1.3",
 	    "laravelbook/ardent": "dev-master",
         "artdarek/oauth-4-laravel": "dev-master",
-        "pongocms/googleapi": "dev-master",
         "google/apiclient": "dev-master"
     },
     "require-dev": {
