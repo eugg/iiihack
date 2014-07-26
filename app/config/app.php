@@ -124,6 +124,7 @@ return array(
         /* Uncomment for use in development */
        'Way\Generators\GeneratorsServiceProvider', // Generators
        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider', // IDE Helpers
+       'Pongo\GoogleAPI\GoogleapiServiceProvider'
 
     ),
 

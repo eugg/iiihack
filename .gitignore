@@ -23,5 +23,6 @@ vagrant
 
 # Packages
 _ide_helpers.php
+/app/config/packages/artdarek/oauth-4-laravel/local/*
 
 nohup.out

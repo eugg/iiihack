@@ -225,11 +225,11 @@ class UserController extends BaseController {
     }
 
     /**
-     * Receive Facebook login parameter
+     * Receive Google login parameter
      *
      */
     public function getGoogleLogin() {
-
+        
         // get data from input
         $code = Input::get( 'code' );
 
@@ -247,8 +247,8 @@ class UserController extends BaseController {
             // Send a request with it
             $result = json_decode( $googleService->request( 'https://www.googleapis.com/oauth2/v1/userinfo' ), true );
 
-            // var_dump($token);
-            // dd($result);
+            //var_dump($api_result);
+            //dd();
 
             if(User::where('email',$result['email'])->exists())
             {
@@ -257,12 +257,13 @@ class UserController extends BaseController {
 
                 if(UserAuth::where('service','google')->where('user_id', $exist_user->id)->exists())
                 {
-                    //update google info ?
+                    //update google info 
+                    $auth = UserAuth::where('service','google')->where('user_id', $exist_user->id)->first();
                 }else{
-                    //dd($token);
                     //Update Userauth Info & token
                     $auth               = new UserAuth;
                     $auth->service      = 'google';
+                }
                     $auth->user_id      = $exist_user->id;
                     $auth->uid          = $result['id'];
                     $auth->accessToken  = $token->getAccessToken();
@@ -270,11 +271,12 @@ class UserController extends BaseController {
                     $auth->refreshToken = $token->getRefreshToken();
                     $auth->extraParams  = json_encode($token->getExtraParams());
                     $auth->save();
-                    dd('finished');
+                    
+                    //return result
+                    $userInfo = array( 'auth' => json_decode($auth), 'user' => json_decode($exist_user) );
+                    echo json_encode($userInfo);
                     //Update User Bio
 
-                        // code...####
-                }
 
             }else
             {
@@ -290,7 +292,49 @@ class UserController extends BaseController {
             return Redirect::to( (string)$url );
         }
     }
+    /**
+     * get User Google Calendar
+     *
+     */
+    public function getGoogleCalendar()
+    {
+        
+        $gAuth = UserAuth::where('service', 'google')->where('user_id', 3)->first();
 
+        $extraParams = json_decode($gAuth->extraParams);
+        $getToken = array( 
+                'access_token' => $gAuth->accessToken,
+                'token_type'   => $extraParams->token_type,
+                'expires_in'   => '3600',
+                'created'      => $gAuth->endOfLife - 3600
+                    );
+        
+        $client = new Google_Client();
+        $client->setAccessToken(json_encode($getToken));
+
+        $event = new Google_Service_Calendar_Event();
+        $event->setSummary('rex test');
+        $event->setLocation('台北市中山南路一號');
+        $start = new Google_Service_Calendar_EventDateTime();
+        $start->setDateTime('2014-07-27T18:57:12.000+08:00');
+        //$start->setTimeZone('Asia/Taipei');
+        $event->setStart($start);
+        $end = new Google_Service_Calendar_EventDateTime();
+        $end->setDateTime('2014-07-27T20:25:00.000+08:00');
+        //$end->setTimeZone('Asia/Taipei');
+        $event->setEnd($end);
+        //$event->setRecurrence(array('RRULE:FREQ=WEEKLY;UNTIL=20110701T100000-07:00'));
+        $attendee1 = new Google_Service_Calendar_EventAttendee();
+        $attendee1->setEmail('rex@huijun.org');
+        $attendees = array($attendee1);
+        $event->attendees = $attendees;
+        $calendarService = new Google_Service_Calendar($client);
+        $recurringEvent = $calendarService->events->insert('primary', $event);
+
+        echo $recurringEvent->getId();
+    }
+
+    
     /**
      * Attempt to do login
      *

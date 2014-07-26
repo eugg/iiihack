@@ -115,3 +115,5 @@ Route::get('/', function () {
 
 Route::controller('blog-api','BlogAPIController');
 Route::controller('delicacy-api','DelicacyAPIController');
+Route::controller('calendar','CalendarController');
+
