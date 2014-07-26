@@ -109,9 +109,8 @@ Route::post('{postSlug}', 'BlogController@postView');
 
 # Index Page - Last route, no matches
 //Route::get('/', array('before' => 'detectLang','uses' => 'BlogController@getIndex'));
-Route::get('/', function () {
-    echo '<h1>iiihackathon!!!</h1>';
-    });
+Route::get('/', 'UserController@getLogin');
+Route::controller('page', 'PageController');
 
 Route::controller('blog-api','BlogAPIController');
 Route::controller('delicacy-api','DelicacyAPIController');

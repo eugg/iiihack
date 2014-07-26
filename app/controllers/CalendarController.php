@@ -84,11 +84,13 @@ class CalendarController extends BaseController {
 		$save_event->google_event_id = $event_id;
 		$save_event->user_id         = $user_id;
 		$save_event->restaurant_id   = $restaurant_id;
-        
+
         $save_event->save();
 
         
-        echo 'create event and save successfully!';
+        $result = array( 'status' => 'ok','eventinfo' => json_decode( $save_event ) );
+
+        echo json_encode($result);
 
 
     }

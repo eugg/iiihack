@@ -272,9 +272,17 @@ class UserController extends BaseController {
                     $auth->extraParams  = json_encode($token->getExtraParams());
                     $auth->save();
                     
+                    $json = true;
+
+                    if( $json )  {
+                        $userInfo = array( 'auth' => json_decode($auth), 'user' => json_decode($exist_user) );
+                        echo json_encode($userInfo);
+                    }else {
+                        return Redirect::to('/page/start')->with('success','Login成功！開始約人吧！');   
+                    }
                     //return result
-                    $userInfo = array( 'auth' => json_decode($auth), 'user' => json_decode($exist_user) );
-                    echo json_encode($userInfo);
+                    
+                    
                     //Update User Bio
 
 
