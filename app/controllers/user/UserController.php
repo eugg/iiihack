@@ -225,6 +225,73 @@ class UserController extends BaseController {
     }
 
     /**
+     * Receive Facebook login parameter
+     *
+     */
+    public function getGoogleLogin() {
+
+        // get data from input
+        $code = Input::get( 'code' );
+
+        // get google service
+        $googleService = OAuth::consumer( 'Google' );
+
+        // check if code is valid
+
+        // if code is provided get user data and sign in
+        if ( !empty( $code ) ) {
+
+            // This was a callback request from google, get the token
+            $token = $googleService->requestAccessToken( $code );
+
+            // Send a request with it
+            $result = json_decode( $googleService->request( 'https://www.googleapis.com/oauth2/v1/userinfo' ), true );
+
+            // var_dump($token);
+            // dd($result);
+
+            if(User::where('email',$result['email'])->exists())
+            {
+                $exist_user = User::where('email',$result['email'])->first();
+                //Active user ...####
+
+                if(UserAuth::where('service','google')->where('user_id', $exist_user->id)->exists())
+                {
+                    //update google info ?
+                }else{
+                    //dd($token);
+                    //Update Userauth Info & token
+                    $auth               = new UserAuth;
+                    $auth->service      = 'google';
+                    $auth->user_id      = $exist_user->id;
+                    $auth->uid          = $result['id'];
+                    $auth->accessToken  = $token->getAccessToken();
+                    $auth->endOfLife    = $token->getEndOfLife();
+                    $auth->refreshToken = $token->getRefreshToken();
+                    $auth->extraParams  = json_encode($token->getExtraParams());
+                    $auth->save();
+                    dd('finished');
+                    //Update User Bio
+
+                        // code...####
+                }
+
+            }else
+            {
+                //create new user
+            }
+        }
+        // if not ask for permission first
+        else {
+            // get googleService authorization
+            $url = $googleService->getAuthorizationUri();
+
+            // return to google login url
+            return Redirect::to( (string)$url );
+        }
+    }
+
+    /**
      * Attempt to do login
      *
      */
